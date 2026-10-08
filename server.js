@@ -3,6 +3,8 @@ const connectDB = require("./config.js");
 const dotenv = require("dotenv");
 const cors = require("cors");
 
+const authRoutes = require("./routes/authRoutes.js");
+
 dotenv.config();
 
 connectDB();
@@ -18,3 +20,5 @@ app.get("/api/spotify_app", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
+
+app.use("/", authRoutes);
