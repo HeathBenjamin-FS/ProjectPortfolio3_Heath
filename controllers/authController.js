@@ -1,5 +1,7 @@
 const axios = require("axios");
 const querystring = require("querystring");
+const User = require("../models/User");
+const jwt = require("jsonwebtoken");
 
 const callback = async (req, res) => {
   const code = req.query.code;
@@ -26,11 +28,45 @@ const callback = async (req, res) => {
 
     const { access_token, refresh_token, expires_in } = response.data;
 
+    const details = await axios.get("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    const tokenExpire = new Date(Date.now() + expires_in * 1000);
+
+    //only if Spotify doesn't give another refresh token!
+    const updateData = {
+      spotifyID: details.data.id,
+      userName: details.data.display_name || "",
+      accessToken: access_token,
+      tokenExpire: tokenExpire,
+    };
+
+    if (refresh_token) {
+      updateData.refreshToken = refresh_token;
+    }
+
+    const user = await User.findOneAndUpdate({ spotifyID: details.data.id }, updateData, { upsert: true, new: true });
+
+    const appToken = jwt.sign(
+      {
+        userId: user._id,
+        spotifyID: user.spotifyID,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" },
+    );
+
     return res.status(200).json({
       message: "Token received successfully!",
-      access_token,
-      refresh_token,
-      expires_in,
+      token: appToken,
+      user: {
+        id: user._id,
+        spotifyID: user.spotifyID,
+        userName: user.userName,
+      },
     });
   } catch (error) {
     console.error("Token exchange failed:", error.response?.data || error.message);
