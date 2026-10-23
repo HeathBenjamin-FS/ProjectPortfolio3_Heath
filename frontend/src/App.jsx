@@ -3,9 +3,10 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { LoginPage } from "./pages/login";
+import { Dashboard } from "./pages/Dashboard";
 import "./App.css";
 
-const Dashboard = () => {
+const DashboardThing = () => {
   const { logout } = useAuth();
   return (
     <div>
@@ -27,6 +28,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
+              {/* <DashboardThing /> */}
               <Dashboard />
             </ProtectedRoute>
           }

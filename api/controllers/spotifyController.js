@@ -1,44 +1,29 @@
 const axios = require("axios");
 
-const getTracks = async (req, res) => {
+const searchCatalogue = async (req, res) => {
   try {
-    const query = req.query.q || "metalcore";
+    const { q, type = "track" } = req.query;
 
-    const response = await axios.get("https://api.spotify.com/v1/search", {
-      headers: {
-        Authorization: `Bearer ${req.spotifyAccessToken}`,
-      },
+    const accessToken = req.spotifyAccessToken || req.user?.accessToken;
+
+    if (!q) {
+      return res.status(400).json({ error: "Queary paramter 'q' is required." });
+    }
+
+    const response = await axios.get(`https://api.spotify.com/v1/search`, {
+      headers: { Authorization: `Bearer ${accessToken}` },
       params: {
-        q: query,
-        type: "track",
+        q,
+        type,
         limit: 10,
       },
     });
 
-    const rawItems = response.data?.tracks?.items || [];
-
-    const tracks = rawItems.map((item) => ({
-      id: item.id,
-      name: item.name,
-      artist: item.artists.map((a) => a.name).join(", ") || "Unknown",
-      album: item.album.name || "Unkown",
-      image: item.album.images[0]?.url || null,
-      previewUrl: item.preview_url || null,
-      spotifyUrl: item.external_urls.spotify || null,
-    }));
-
-    return res.status(200).json({
-      success: true,
-      query: query,
-      tracks: tracks,
-    });
+    res.json(response.data);
   } catch (error) {
-    console.error("Spotify API call failed", error.response?.data || error.message);
-    return res.status(error.response?.status || 500).json({
-      error: "Failed to fetch tracks from Spotify",
-      details: error.response?.data || error.message,
-    });
+    console.error("Spotify search error:", error.response?.data || error.message);
+    res.status(500).json({ error: "Failed to fetch search results from Spotify." });
   }
 };
 
-module.exports = { getTracks };
+module.exports = { searchCatalogue };

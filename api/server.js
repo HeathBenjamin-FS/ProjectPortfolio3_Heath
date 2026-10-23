@@ -10,15 +10,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
 app.get("/api/spotify_app", (req, res) => {
   res.status(200).json({ message: "Welcome to the Spotify App! Keep checking for cool updates!" });
 });
+app.use("/", authRoutes);
 app.listen(PORT, () => {
   console.log(`Listening on ${PORT}`);
 });
-
-app.use("/", authRoutes);

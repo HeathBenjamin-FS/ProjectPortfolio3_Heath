@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@hello-pangea/dnd": "^18.0.1",
+    "dotenv": "^18.0.9",
     "framer-motion": "^14.5.0",
     "lucide-react": "^1.61.0",
     "react": "^19.3.1",

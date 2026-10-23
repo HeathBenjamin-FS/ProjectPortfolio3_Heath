@@ -1,10 +1,8 @@
-# Spotify Music Finder!
+# Spotify Tier List!
 
 ## Project Overview
 
-~~This application will take songs that you know, and find songs with the same energy in a different genre!~~
-
-Due to the new restrictions on what is available, the scope of this project has to be reoriented. More information coming soon!
+This application will allow you to make tier lists for artists, albums, and tracks!
 
 ## Prerequisites
 
