@@ -59,15 +59,7 @@ const callback = async (req, res) => {
       { expiresIn: "7d" },
     );
 
-    return res.status(200).json({
-      message: "Token received successfully!",
-      token: appToken,
-      user: {
-        id: user._id,
-        spotifyID: user.spotifyID,
-        userName: user.userName,
-      },
-    });
+    return res.redirect(`http://localhost:5173/login?token=${appToken}`);
   } catch (error) {
     console.error("Token exchange failed:", error.response?.data || error.message);
     return res.status(500).json({
