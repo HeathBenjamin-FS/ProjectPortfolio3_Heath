@@ -13,13 +13,18 @@ To load this application on your machine, you need to have the following technol
 - MongoDB
 - Spotify account
 - (optional) Postman or cURL for API testing
-- (optional) Mongo Compass
+- (optional) MongoDB Compass
 
 ## Getting Started
 
 1. **Clone the repo and install the dependencies**
    - `cd ProjectPortfolio3_Heath`
-   - `npm install`
+   - `cd api`
+     - `npm install`
+   - `cd frontend`
+     - `npm install`
+   - Then, cd back into the root and `npm install`.
+   - Now, all you have to do is run `npm run dev` **in the root directory** and this will start up both backend and frontend services simultaneously!
 
 2. We need to set up a `.env` file. There will be more information about this file below. In order to do this, create that file name in your root directory, then ensure it is also added to your `.gitignore` file as well. Add your MongoURI to the `.env` file, as well as your `PORT` that you desire this application to run on.
 
@@ -36,12 +41,17 @@ JWT_SECRET="your_jwt_secret_key"
 
 ## Important information
 
-Your token will automatically be refreshed within 60 seconds of its expiration. Middleware has been written to check for this upon each request.
+- Your token will automatically be refreshed within 60 seconds of its expiration. Middleware has been written to check for this upon each request.
+
+- The front end will now be checking localStorage for your spotify_jwt, and only allow you to make a tier list if you have been authenticated by Spotify's API!
 
 ### Links
 
+- `http://localhost:5173` is the main link for this entire project. Navigating here after you start both services with automatically redirect you to Spotify's login, authenticate you, and grant access to the tier list creator!
+
 - `http://127.0.0.1:3000/login` for logging into Spotify and getting a temporary access token. You will automatically be redirected to `/callback` with your JWT, which is what you will use for your Bearer Token in Postman.
-- `http://127.0.0.1:3000/callback` This will upsert the user into MongoDB and return a signed JWT! **IMPORTANT NOTE** Make sure that this link is the EXACT same one you set in your Spotify application upon creation. If it isn't you can change it to this if you would like to.
+- `http://127.0.0.1:3000/callback` This will upsert the user into MongoDB and return a signed JWT!
+  - **IMPORTANT NOTE** Make sure that this link is the EXACT same one you set in your Spotify application upon creation. If it isn't you can change it to this if you would like to.
 - `http://127.0.0.1:3000/auth/status` This endpoint will tell you if you are authenticated or not.
   - You will have either a true/false json response:
 
@@ -53,7 +63,9 @@ Your token will automatically be refreshed within 60 seconds of its expiration. 
   }
   ```
 
-- `http://127.0.0.1:3000/spotify/tracks` This endpoint will return data that you send to it using your JWT and a query! Here is an example line for you: - `http://127.0.0.1:3000/spotify/tracks?q=metalcore` - Run this line as a GET request in a software like Postman, and you should see something like this returned to you:
+- `http://127.0.0.1:3000/spotify/tracks` This endpoint will return data that you send to it using your JWT and a query! Here is an example line for you:
+  - `http://127.0.0.1:3000/spotify/tracks?q=metalcore`
+    - Run this line as a GET request in a software like Postman, and you should see something like this returned to you:
 
   Headers: Authorization: Bearer (insert your JWT here!)
 

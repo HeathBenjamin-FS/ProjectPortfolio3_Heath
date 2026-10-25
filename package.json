@@ -1,0 +1,11 @@
+{
+  "name": "fullstack",
+  "scripts": {
+    "frontend": "cd frontend && npm run dev",
+    "api": "cd api && npm run dev",
+    "dev": "concurrently --names \"VITE,EXPR\" -c \"cyan.bold,green.bold\" \"npm run frontend\" \"npm run api\""
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.6"
+  }
+}
